@@ -1,7 +1,7 @@
-# 📚🔊 Chat With Confluence
+# 📖🔊 Chat With Confluence
 
 # Overview
-📖 Use Embedded Vector Store and an LLM to chat with your confluence docs
+Use Embedded Vector Store and an LLM to chat with your Confluence docs
 
 ✨ Only need a Confluence Account and OpenAI account.
 
