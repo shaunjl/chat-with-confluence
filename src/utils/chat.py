@@ -78,7 +78,7 @@ def get_text():
 def get_prompt():
     prompt_template = """Use the following pieces of context to answer the question at the end.
     If you don't know the answer, just say that you don't know, don't try to make up an answer.
-    If the question isn't about the context, just say that your purpose is to provide information about the Repo.
+    If the question isn't about the context, just say that your purpose is to provide information about the Confluence Space.
 
     {context}
 
