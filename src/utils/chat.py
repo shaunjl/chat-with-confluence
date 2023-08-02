@@ -1,32 +1,21 @@
 import argparse
 import os
+import streamlit as st
+
+from streamlit_chat import message
+
 from langchain.vectorstores import Chroma
-from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.chains import RetrievalQA
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts import PromptTemplate
-import streamlit as st
-from streamlit_chat import message
 
-def get_embeddings_function():
-    # TODO - validate configs
-    model_name = "sentence-transformers/all-mpnet-base-v2"
-    model_kwargs = {'device': 'cpu'}
-    encode_kwargs = {'normalize_embeddings': False}
-    return HuggingFaceEmbeddings(
-        model_name=model_name,
-        model_kwargs=model_kwargs,
-        encode_kwargs=encode_kwargs
-    )
-
-def get_vector_store_persist_directory(confluence_space_key):
-  return os.path.join("./chroma_stores", confluence_space_key)
+from utils.shared import get_embeddings_function, get_vector_store_persist_directory
 
 def get_vector_store(confluence_space_key):
-  return Chroma(
-      persist_directory=get_vector_store_persist_directory(confluence_space_key),
-      embedding_function=get_embeddings_function()
-  )
+    return Chroma(
+        persist_directory=get_vector_store_persist_directory(confluence_space_key),
+        embedding_function=get_embeddings_function()
+    )
 
 def run_chat_app(confluence_space_key):
     """Run the chat application using the Streamlit framework."""
@@ -58,18 +47,6 @@ def run_chat_app(confluence_space_key):
             message(st.session_state["past"][i], is_user=True, key=str(i) + "_user")
             message(st.session_state["generated"][i], key=str(i))
 
-
-def generate_response(prompt):
-    """
-    Generate a response using OpenAI's ChatCompletion API and the specified prompt.
-    """
-    completion = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo", messages=[{"role": "user", "content": prompt}]
-    )
-    response = completion.choices[0].message.content
-    return response
-
-
 def get_text():
     """Create a Streamlit input field and return the user's input."""
     input_text = st.text_input("input", key="input", label_visibility="hidden", placeholder="Ask me a question")
@@ -87,9 +64,8 @@ def get_prompt():
     return PromptTemplate(template=prompt_template, input_variables=["context", "question"])
 
 def search_db(db, query):
-    # TODO - see https://python.langchain.com/docs/integrations/vectorstores/chroma
-    """Search for a response to the query in the DeepLake database."""
-    # Create a retriever from the DeepLake instance
+    """Search for a response to the query in the local Chroma database."""
+    # Create a retriever from the Chroma instance
     retriever = db.as_retriever()
     # Set the search parameters for the retriever
     retriever.search_kwargs["distance_metric"] = "cos"
@@ -104,8 +80,8 @@ def search_db(db, query):
     # Return the result of the query
     return qa.run(query)
 
-
 if __name__ == "__main__":
+    os.environ['TOKENIZERS_PARALLELISM'] = 'false'
     parser = argparse.ArgumentParser()
     parser.add_argument("--confluence_space_key", type=str, required=True)
     args = parser.parse_args()
