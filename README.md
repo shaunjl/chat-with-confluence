@@ -3,7 +3,13 @@
 # Overview
 📖 Use Embedded Vector Store and an LLM to chat with your confluence docs
 
-✨ Only need a Confluence Account and OpenAI account. Otherwise, uses only open source (Hugging Face, Chroma, LangChain)
+✨ Only need a Confluence Account and OpenAI account.
+
+Uses (all via Langchain):
+- Confluence API
+- Hugging Face
+- ChromaDB
+- OpenAI
 
 # Approach
 1. Create a local embedding vector store of the Confluence docs
