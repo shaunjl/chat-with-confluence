@@ -1,0 +1,12 @@
+pathspec
+langchain
+python-dotenv
+atlassian-python-api
+beautifulsoup4
+lxml
+tiktoken
+sentence_transformers
+chromadb
+streamlit
+streamlit_chat
+openai
