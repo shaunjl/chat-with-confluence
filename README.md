@@ -34,7 +34,7 @@ Set the values (don't worry, this file is in `.gitignore`)
 
 ```bash
 python3 -m venv pyenv
-source pyenv/bin/activate`
+source pyenv/bin/activate
 ```
 
 ### Install python requirements
