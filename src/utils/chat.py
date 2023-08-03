@@ -52,17 +52,6 @@ def get_text():
     input_text = st.text_input("input", key="input", label_visibility="hidden", placeholder="Ask me a question")
     return input_text
 
-def get_prompt():
-    prompt_template = """Use the following pieces of context to answer the question at the end.
-    If you don't know the answer, just say that you don't know, don't try to make up an answer.
-    If the question isn't about the context, just say that your purpose is to provide information about the Confluence Space.
-
-    {context}
-
-    Question: {question}
-    """
-    return PromptTemplate(template=prompt_template, input_variables=["context", "question"])
-
 def search_db(db, query):
     """Search for a response to the query in the local Chroma database."""
     # Create a retriever from the Chroma instance
@@ -75,8 +64,7 @@ def search_db(db, query):
     # Create a ChatOpenAI model instance
     model = ChatOpenAI(model="gpt-3.5-turbo")
     # Create a RetrievalQA instance from the model and retriever
-    chain_type_kwargs = {"prompt": get_prompt()}
-    qa = RetrievalQA.from_chain_type(model, retriever=retriever, chain_type_kwargs=chain_type_kwargs)
+    qa = RetrievalQA.from_chain_type(model, retriever=retriever)
     # Return the result of the query
     return qa.run(query)
 
